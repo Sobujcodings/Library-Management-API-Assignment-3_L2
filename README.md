@@ -1,37 +1,39 @@
-# 📚 Library Management Project
+# 📚 Library Management API
 
-This is a **Library Management API with Express, TypeScript & MongoDB** built using **Express.js**, **TypeScript**, and **MongoDB (Mongoose)**. It supports managing books and borrow records, allowing you to create, update, and track book borrowing.
-
-# Server Live-link
-**https://assignment-3-express-mongoose.vercel.app/api/books**
+A **RESTful API** for managing a library system using **Express.js**, **TypeScript**, and **MongoDB (Mongoose)**. This API enables users to add, update, delete, borrow books, and retrieve borrowing summaries.
 
 ---
 
-## 🛠️ Tech Stack
+## 🌐 Live Server
 
-- **Node.js**
-- **Express.js v5**
-- **TypeScript**
-- **MongoDB & Mongoose**
+🔗 **[https://assignment-3-express-mongoose.vercel.app/api/books]**
 
 ---
 
-# Install dependencies
-- npm install
-- npm init -y
-- npm install express mongoose
-- npm install -D typescript ts-node-dev @types/express
-- npx tsc --init
+## ⚙️ Tech Stack
 
+- 🚀 **Node.js**
+- ⚙️ **Express.js (v5)**
+- 🛡️ **TypeScript**
+- 🗃️ **MongoDB** with **Mongoose ODM**
 
-# package json script to run the server using npm run dev
-- "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/app/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+---
 
-# Start the development server locally
-npm run dev
+## 🛠️ Getting Started
+
+### 📦 Installation
+
+```bash
+# Initialize project and install dependencies
+npm init -y
+npm install express mongoose
+
+# Install development dependencies
+npm install -D typescript ts-node-dev @types/express
+
+# Initialize TypeScript configuration
+npx tsc --init
+
 
 
 ## 🚀 Features
