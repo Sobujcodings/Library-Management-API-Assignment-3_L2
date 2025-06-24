@@ -33,7 +33,7 @@ npm install -D typescript ts-node-dev @types/express
 
 # Initialize TypeScript configuration
 npx tsc --init
-
+```
 
 
 ## 🚀 Features
