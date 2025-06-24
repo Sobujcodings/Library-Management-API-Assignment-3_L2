@@ -6,7 +6,7 @@ A **RESTful API** for managing a library system using **Express.js**, **TypeScri
 
 ## 🌐 Live Server
 
-🔗 **[https://assignment-3-express-mongoose.vercel.app/api/books]**
+🔗 **https://assignment-3-express-mongoose.vercel.app/api/books**
 
 ---
 
