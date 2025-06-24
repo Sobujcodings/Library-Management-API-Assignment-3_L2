@@ -1,3 +1,4 @@
+
 # 📚 Library Management API
 
 A **RESTful API** for managing a library system using **Express.js**, **TypeScript**, and **MongoDB (Mongoose)**. This API enables users to add, update, delete, borrow books, and retrieve borrowing summaries.
@@ -6,7 +7,7 @@ A **RESTful API** for managing a library system using **Express.js**, **TypeScri
 
 ## 🌐 Live Server
 
-🔗 **https://assignment-3-express-mongoose.vercel.app**
+🔗 **[API Endpoint – https://assignment-3-express-mongoose.vercel.app/api/books](https://assignment-3-express-mongoose.vercel.app/api/books)**
 
 ---
 
@@ -35,36 +36,83 @@ npm install -D typescript ts-node-dev @types/express
 npx tsc --init
 ```
 
+### 🔧 Scripts
 
-## 🚀 Features
+Update your `package.json`:
 
-- Add, update, and list books
-- Borrow books with due dates
-- Track available copies
-- MongoDB aggregation for borrow summaries
-- Proper schema validation and error handling
-- TypeScript for strong typing
+```json
+"scripts": {
+  "dev": "ts-node-dev --respawn --transpile-only src/app/server.ts",
+  "test": "echo \"Error: no test specified\" && exit 1"
+}
+```
 
+### 🚀 Run the development server
 
-## 🚀 API Details
+```bash
+npm run dev
+```
 
-- POST /api/books
-* Create single book with book information given by the user.
+---
 
-- GET /api/books 
-* Find all the books with filter,sort and limit option. 
+## 📌 Features
 
-- GET /books/:bookId
-* Find single book details by params id.
+- 📗 Add, update, and delete books
+- 📚 Borrow books and track due dates
+- 🔁 Track book availability
+- 📊 MongoDB aggregation for borrow summaries
+- ✅ Schema validation and error handling
+- 🧠 Strong typing with TypeScript
 
-- DELETE /books/:bookId
-* Delete single book by id.
+---
 
-- PUT /books/:bookId 
-* Update single book by id and body data given by the user.
+## 📘 API Endpoints
 
-- POST /borrow 
-* Create a request to borrow book then server check the logic of avalibility from the book collection.
+### 📕 Books
 
-- GET /borrow 
-* get summary of all borrowred book by aggeration.
+- `POST /api/books`  
+  ➤ Create a new book with user-provided information.
+
+- `GET /api/books`  
+  ➤ Retrieve all books with filter, sort, and limit options.
+
+- `GET /api/books/:bookId`  
+  ➤ Fetch a single book by its ID.
+
+- `PUT /api/books/:bookId`  
+  ➤ Update a book by its ID using request body data.
+
+- `DELETE /api/books/:bookId`  
+  ➤ Delete a book by its ID.
+
+---
+
+### 📗 Borrow
+
+- `POST /api/borrow`  
+  ➤ Borrow a book. The server checks book availability before processing.
+
+- `GET /api/borrow`  
+  ➤ Retrieve a summary of all borrowed books using MongoDB aggregation.
+
+---
+
+## 📂 Project Structure (Example)
+
+```
+src/
+├── app/
+│   ├── server.ts
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   └── utils/
+├── config/
+└── ...
+```
+
+---
+
+## 📜 License
+
+This project is for educational purposes and part of a learning assignment. You're free to use and improve it!
