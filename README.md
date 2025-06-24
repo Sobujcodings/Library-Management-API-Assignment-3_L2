@@ -2,6 +2,7 @@
 
 This is a **Library Management API with Express, TypeScript & MongoDB** built using **Express.js**, **TypeScript**, and **MongoDB (Mongoose)**. It supports managing books and borrow records, allowing you to create, update, and track book borrowing.
 
+# Server Live-link
 **https://assignment-3-express-mongoose.vercel.app/api/books**
 
 ---
@@ -16,33 +17,14 @@ This is a **Library Management API with Express, TypeScript & MongoDB** built us
 ---
 
 # Install dependencies
-npm install
-
-# Initialize project
-npm init -y
-
-# Install core dependencies
-npm install express mongoose
-
-# Install TypeScript and dev tools
-npm install -D typescript ts-node-dev @types/express
-
-# Setup Typescript
+- npm install
+- npm init -y
+- npm install express mongoose
+- npm install -D typescript ts-node-dev @types/express
 - npx tsc --init
 
-{
-  "compilerOptions": {
-    "target": "ES6",
-    "module": "commonjs",
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "esModuleInterop": true,
-    "strict": true,
-    "skipLibCheck": true
-  }
-}
 
-# Update the package json script to run the server using npm run dev
+# package json script to run the server using npm run dev
 - "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/app/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -65,15 +47,22 @@ npm run dev
 ## 🚀 API Details
 
 - POST /api/books
+* Create single book with book information given by the user.
 
 - GET /api/books 
+* Find all the books with filter,sort and limit option. 
 
 - GET /books/:bookId
+* Find single book details by params id.
 
 - DELETE /books/:bookId
+* Delete single book by id.
 
 - PUT /books/:bookId 
+* Update single book by id and body data given by the user.
 
 - POST /borrow 
+* Create a request to borrow book then server check the logic of avalibility from the book collection.
 
 - GET /borrow 
+* get summary of all borrowred book by aggeration.
