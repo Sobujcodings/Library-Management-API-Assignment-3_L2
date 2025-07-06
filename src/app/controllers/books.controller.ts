@@ -1,12 +1,13 @@
 import { SortOrder } from "mongoose";
 import { books } from "../models/books.model";
-import express, { Request, Response } from "express";
+import { Request, Response, Router } from "express";
+import express from "express";
 import { borrow } from "../models/borrow.model";
-import { bookInstanceMethod } from "../interfaces/books.interface";
-import app from "../../app";
 import { formatError } from "../utils/error.Response";
+import app from "../../app";
+import cors from "cors";
 
-export const booksRoutes = express.Router();
+export const booksRoutes: Router = express.Router();
 
 // create book by books model
 booksRoutes.post("/books", async (req: Request, res: Response) => {
@@ -22,7 +23,6 @@ booksRoutes.post("/books", async (req: Request, res: Response) => {
     res.status(400).json(formatError(error));
   }
 });
-
 
 // get all books
 booksRoutes.get("/books", async (req: Request, res: Response) => {
@@ -56,55 +56,59 @@ booksRoutes.get("/books", async (req: Request, res: Response) => {
   }
 });
 
-
 // get single book
-booksRoutes.get("/books/:bookId", async (req: Request, res: Response) => {
-  try {
-    const bookId = req.params.bookId;
-    const singleData = await books.findById(bookId);
+booksRoutes.get(
+  "/books/:bookId",
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { bookId } = req.params;
+      const singleData = await books.findById(bookId);
 
-    if (!singleData) {
-      return res.status(200).json({
-        success: false,
-        message: "Book not found",
-        data: [],
+      if (!singleData) {
+        res.status(200).json({
+          success: false,
+          message: "Book not found",
+          data: [],
+        });
+        return;
+      }
+      res.status(200).json({
+        success: true,
+        message: "Book retrieved successfully",
+        data: singleData,
       });
+    } catch (error) {
+      res.status(500).json(formatError(error));
     }
-    return res.status(200).json({
-      success: true,
-      message: "Book retrieved successfully",
-      data: singleData,
-    });
-  } catch (error) {
-    res.status(500).json(formatError(error));
   }
-});
-
+);
 
 // delete a single book
-booksRoutes.delete("/books/:bookId", async (req: Request, res: Response) => {
-  try {
-    const bookId = req.params.bookId;
-    const singleData = await books.findByIdAndDelete(bookId);
+booksRoutes.delete(
+  "/books/:bookId",
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const bookId = req.params.bookId;
+      const singleData = await books.findByIdAndDelete(bookId);
 
-    if (!singleData) {
-      return res.status(200).json({
-        success: false,
-        message: "No book found",
+      if (!singleData) {
+        res.status(200).json({
+          success: false,
+          message: "No book found",
+          data: null,
+        });
+        return;
+      }
+      res.status(200).json({
+        success: true,
+        message: "Book deleted successfully",
         data: null,
       });
+    } catch (error) {
+      res.status(500).json(formatError(error));
     }
-
-    return res.status(200).json({
-      success: true,
-      message: "Book deleted successfully",
-      data: null,
-    });
-  } catch (error) {
-    res.status(500).json(formatError(error));
   }
-});
-
+);
 
 // update single note
 booksRoutes.put("/books/:bookId", async (req: Request, res: Response) => {
@@ -127,62 +131,73 @@ booksRoutes.put("/books/:bookId", async (req: Request, res: Response) => {
   }
 });
 
-
 // 6.Borrow a book
-booksRoutes.post("/borrow", async (req: Request, res: Response) => {
-  try {
-    const body = req.body;
-    console.log(body);
+booksRoutes.post(
+  "/borrow",
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const body = req.body;
+      console.log(body);
 
-    // Validate request
-    if (
-      !body.book ||
-      body.quantity === undefined ||
-      body.dueDate === undefined
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "bookId, quantity, and dueDate are required",
-      });
-    }
-    if (body.quantity <= 0 || !Number.isInteger(body.quantity)) {
-      return res.status(400).json({
-        success: false,
-        message: "Quantity must be a positive integer",
-      });
-    }
+      // Validate request
+      if (
+        !body.book ||
+        body.quantity === undefined ||
+        body.dueDate === undefined
+      ) {
+        res.status(400).json({
+          success: false,
+          message: "bookId, quantity, and dueDate are required",
+        });
+        return;
+      }
 
-    // Step 1: Find the book
-    const book = await books.findById(body.book);
-    if (!book) {
-      return res.status(404).json({
-        success: false,
-        message: "Book not found",
-      });
-    }
-    // step-1 (check it has enough copy)
-    if (book.copies < body.quantity) {
-      return res.status(400).json({
-        success: false,
-        message: "Not enough copies available",
-      });
-    }
-    // step: 2 Deduct the requested quantity from the book’s copies.
-    book.copies -= body.quantity;
+      if (body.quantity <= 0 || !Number.isInteger(body.quantity)) {
+        res.status(400).json({
+          success: false,
+          message: "Quantity must be a positive integer",
+        });
+        return;
+      }
 
-    // calling the instance method on book (all book attr will be found on that intance by this.copies,available etc)
-    const copies = book.checkingBookCopies(book.copies);
-    const bookBorrowed = await borrow.create(body);
-    res.status(201).json({
-      success: true,
-      message: "Book borrowed successfully",
-      data: bookBorrowed,
-    });
-  } catch (error) {
-    res.status(500).json(formatError(error));
+      // Step 1: Find the book
+      const book = await books.findById(body.book);
+      if (!book) {
+        res.status(404).json({
+          success: false,
+          message: "Book not found",
+        });
+        return;
+      }
+
+      // Step 2: Check copies
+      if (book.copies < body.quantity) {
+        res.status(400).json({
+          success: false,
+          message: "Not enough copies available",
+        });
+        return;
+      }
+
+      // Step 3: Deduct copies
+      book.copies -= body.quantity;
+
+      // Call instance method
+      book.checkingBookCopies(book.copies);
+
+      // Save borrowed book
+      const bookBorrowed = await borrow.create(body);
+
+      res.status(201).json({
+        success: true,
+        message: "Book borrowed successfully",
+        data: bookBorrowed,
+      });
+    } catch (error) {
+      res.status(500).json(formatError(error));
+    }
   }
-});
-
+);
 
 // get all borrow books
 booksRoutes.get("/borrow", async (req: Request, res: Response) => {

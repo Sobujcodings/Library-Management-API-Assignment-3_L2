@@ -60,16 +60,17 @@ exports.booksRoutes.get("/books", (req, res) => __awaiter(void 0, void 0, void 0
 // get single book
 exports.booksRoutes.get("/books/:bookId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const bookId = req.params.bookId;
+        const { bookId } = req.params;
         const singleData = yield books_model_1.books.findById(bookId);
         if (!singleData) {
-            return res.status(200).json({
+            res.status(200).json({
                 success: false,
                 message: "Book not found",
                 data: [],
             });
+            return;
         }
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
             message: "Book retrieved successfully",
             data: singleData,
@@ -85,13 +86,14 @@ exports.booksRoutes.delete("/books/:bookId", (req, res) => __awaiter(void 0, voi
         const bookId = req.params.bookId;
         const singleData = yield books_model_1.books.findByIdAndDelete(bookId);
         if (!singleData) {
-            return res.status(200).json({
+            res.status(200).json({
                 success: false,
                 message: "No book found",
                 data: null,
             });
+            return;
         }
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
             message: "Book deleted successfully",
             data: null,
@@ -130,36 +132,41 @@ exports.booksRoutes.post("/borrow", (req, res) => __awaiter(void 0, void 0, void
         if (!body.book ||
             body.quantity === undefined ||
             body.dueDate === undefined) {
-            return res.status(400).json({
+            res.status(400).json({
                 success: false,
                 message: "bookId, quantity, and dueDate are required",
             });
+            return;
         }
         if (body.quantity <= 0 || !Number.isInteger(body.quantity)) {
-            return res.status(400).json({
+            res.status(400).json({
                 success: false,
                 message: "Quantity must be a positive integer",
             });
+            return;
         }
         // Step 1: Find the book
         const book = yield books_model_1.books.findById(body.book);
         if (!book) {
-            return res.status(404).json({
+            res.status(404).json({
                 success: false,
                 message: "Book not found",
             });
+            return;
         }
-        // step-1 (check it has enough copy)
+        // Step 2: Check copies
         if (book.copies < body.quantity) {
-            return res.status(400).json({
+            res.status(400).json({
                 success: false,
                 message: "Not enough copies available",
             });
+            return;
         }
-        // step: 2 Deduct the requested quantity from the book’s copies.
+        // Step 3: Deduct copies
         book.copies -= body.quantity;
-        // calling the instance method on book (all book attr will be found on that intance by this.copies,available etc)
-        const copies = book.checkingBookCopies(book.copies);
+        // Call instance method
+        book.checkingBookCopies(book.copies);
+        // Save borrowed book
         const bookBorrowed = yield borrow_model_1.borrow.create(body);
         res.status(201).json({
             success: true,

@@ -5,7 +5,7 @@ const mongoose_1 = require("mongoose");
 const borrowSchema = new mongoose_1.Schema({
     // reference to another model (to join both model and get book data in the borrow model/table)
     book: {
-        type: mongoose_1.ObjectId,
+        type: mongoose_1.Types.ObjectId,
         required: true,
     },
     quantity: {

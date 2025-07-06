@@ -21,10 +21,10 @@ async function main() {
 main();
 
 
-
 // / import { MongoClient, ServerApiVersion } from "mongodb";
 // import app from "./app";
 // // import { client } from "./config/mongodb";
+import cors from "cors";
 
 // let server;
 // const port = 5000;

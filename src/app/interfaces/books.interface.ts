@@ -7,12 +7,11 @@ export interface Ibooks {
   genre: string;
   isbn: string;
   description: string;
-  copies: number, 
-  available: true,
+  copies: number;
+  available: boolean;
 }
-
 
 // create interface for instance method
 export interface bookInstanceMethod {
-  checkingBookCopies(copies : number): number
+  checkingBookCopies(copies: number): number;
 }

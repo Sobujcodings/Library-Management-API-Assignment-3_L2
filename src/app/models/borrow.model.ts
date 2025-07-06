@@ -1,11 +1,11 @@
-import { Schema, ObjectId, model } from "mongoose";
+import { Schema, ObjectId, model, Types } from "mongoose";
 import { Iborrow } from "../interfaces/borrow.interface";
 
 const borrowSchema = new Schema<Iborrow>(
   {
     // reference to another model (to join both model and get book data in the borrow model/table)
     book: {
-      type: ObjectId,
+      type: Types.ObjectId,
       required: true,
     },
     quantity: {
